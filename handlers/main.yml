@@ -1,0 +1,4 @@
+---
+# handlers file for logentries
+- name: Restart logentries
+  service: name=logentries state=restarted sleep=2

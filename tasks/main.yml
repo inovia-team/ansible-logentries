@@ -1,0 +1,56 @@
+---
+# tasks file for logentries
+- name: Add repository
+  apt_repository:
+    repo: 'deb http://rep.logentries.com/ {{ansible_distribution_release}} main'
+    state: present
+    filename: logentries
+  become: yes
+  tags:
+    - logentries
+
+- name: add key
+  apt_key:
+    keyserver: pgp.mit.edu
+    id: A5270289C43C79AD
+    state: present
+  become: yes
+  tags:
+    - logentries
+
+- name: Install list of packages
+  apt: name={{item}} state=installed update_cache=yes
+  become: yes
+  with_items:
+    - logentries
+    - logentries-daemon
+    - python-setproctitle
+  tags:
+    - logentries
+
+- name: register account
+  command: "le register --account-key {{logentries_account_key}}"
+  become: yes
+  tags:
+    - logentries
+
+- name: register server
+  command: "le register --hostname {{logentries_stage}} --force"
+  become: yes
+  tags:
+    - logentries
+
+- name: create config folder
+  file:
+    path: /etc/le/conf.d
+    state: directory
+    mode: 0755
+
+- name: deploy config logentries
+  template: src=logentries.j2 dest=/etc/le/conf.d/{{stage}}-{{ item.key }}.conf
+  with_dict: '{{ logentries_logs }}'
+  notify:
+    - Restart logentries
+  tags:
+    - logentries
+

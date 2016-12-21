@@ -1,0 +1,5 @@
+---
+# defaults file for logentries
+logentries_logs: []
+logentries_account_key: ""
+logentries_stage: ""

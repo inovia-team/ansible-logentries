@@ -1,0 +1,6 @@
+{% for logs in item.value %}
+[{{logentries_stage}}-{{ logs.logentries_project }}]
+path = {{ logs.logentries_files_on_server }}
+destination = {{ logs.logentries_destination_on_logentries }}
+
+{% endfor %}
