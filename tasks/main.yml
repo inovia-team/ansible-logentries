@@ -34,11 +34,11 @@
   tags:
     - logentries
 
-- name: register server
-  command: "le register --hostname {{logentries_stage}} --force"
-  become: yes
-  tags:
-    - logentries
+- name: deactivate pull-server-side-config
+  lineinfile:
+    dest: /etc/le/config
+    regexp: "pull-server-side-config = "
+    line: "pull-server-side-config = False"
 
 - name: create config folder
   file:
