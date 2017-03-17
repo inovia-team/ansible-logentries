@@ -1,0 +1,34 @@
+---
+- name: create folder containing formatters
+  file:
+    path: /etc/le/le_formatters/
+    state: directory
+    mode: "u=rwx,g=rx,o=rx"
+    owner: root
+  become: yes
+  tags:
+    - logentries
+    - formatters
+
+- name: initiate module
+  file:
+    path: /etc/le/le_formatters/__init__.py
+    state: touch
+    mode: "u=rwx,g=rx,o=rx"
+    owner: root
+  become: yes
+  tags:
+    - logentries
+    - formatters
+
+- name: deploy formatting class
+  template:
+    src: le_formatters/formatters.py.j2
+    dest: /etc/le/le_formatters/formatters.py
+    validate: python %s
+  notify:
+    - Restart logentries
+  tags:
+    - logentries
+    - formatters
+
