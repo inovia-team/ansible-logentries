@@ -54,3 +54,10 @@
   tags:
     - logentries
 
+- name: deploy formatting
+  include: formatting.yml
+  when: logentries_formatters
+  tags:
+    - logentries
+    - formatters
+

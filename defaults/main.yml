@@ -3,3 +3,7 @@
 logentries_logs: []
 logentries_account_key: ""
 logentries_stage: ""
+
+# formatters
+logentries_formatters: ""
+

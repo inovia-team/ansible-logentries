@@ -1,0 +1,29 @@
+import re
+
+class Form(object):
+    """Formats lines based of pattern given."""
+
+    def __init__(self, identity, hostname, log_name, token):
+        self.identity = identity
+        self.hostname = hostname
+        self.log_name = log_name
+        self.token = token
+
+{% for format in logentries_formatters.format %}
+    def {{ format.method_name }}(self, line):
+        line = line.rstrip()
+        m = re.match(r"{{ format.regexp }}", line)
+        if m:
+            pl = m.groupdict()
+            return {{ format.output_line }}
+        else:
+            return line
+
+{% endfor %}
+
+formatters = {
+{% for format in logentries_formatters.formatters %}
+    '{{ logentries_stage }}-{{ format.logentries_project }}': lambda hostname, log_name, token: Form('{{ logentries_stage }}-{{ format.logentries_project }}', hostname, log_name, token).{{ format.method_name }},
+{% endfor %}
+}
+
